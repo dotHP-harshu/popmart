@@ -1,0 +1,228 @@
+# ==============================================================================
+# Dependency Directories
+# ==============================================================================
+node_modules/
+jspm_packages/
+web_modules/
+bower_components/
+packages/*/node_modules/
+.pnp/
+.pnp.js
+.yarn/
+.yarn/cache/
+.yarn/install-state.gz
+
+# ==============================================================================
+# Environment Variables & Secrets
+# ==============================================================================
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.staging.local
+.env.development
+.env.production
+.env.test
+.env.*.local
+.envrc
+.envrc.*
+secrets.json
+secrets.*
+credentials.json
+*.pem
+*.key
+*.cert
+id_rsa
+id_rsa.pub
+
+# ==============================================================================
+# Build & Distribution Directories
+# ==============================================================================
+dist/
+build/
+out/
+.next/
+.nuxt/
+.output/
+.cache/
+.eslintcache
+.parcel-cache/
+.vite/
+.turbo/
+.serverless/
+.firebase/
+.docusaurus/
+.storybook-static/
+tmp/
+temp/
+.svelte-kit/
+
+# ==============================================================================
+# Logs and Runtime Data
+# ==============================================================================
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+debug.log
+error.log
+access.log
+debugger.log
+dump.rdb
+*.sqlite
+*.sqlite3
+*.db
+*.leveldb/
+*.pid
+*.pid.lock
+*.seed
+*.seed.lock
+*.tgz
+*.tar.gz
+.DS_Store
+Thumbs.db
+desktop.ini
+.fsevents
+*.stackdump
+hs_err_pid*
+
+# ==============================================================================
+# Testing & Code Coverage
+# ==============================================================================
+coverage/
+*.lcov
+.nyc_output/
+jest/
+junit.xml
+test-results/
+.playwright/
+cypress/videos/
+cypress/screenshots/
+.allure/
+reports/
+
+# ==============================================================================
+# IDEs, Editors, and OS-Specific Files
+# ==============================================================================
+.vscode/
+.vs-config/
+.idea/
+*.swb
+*.swo
+*.sublime-*
+.atom/
+.project
+.classpath
+.settings/
+*.iml
+*.ipr
+*.iws
+*.code-workspace
+*.tmp
+*.bak
+*.swp
+*~
+
+# ==============================================================================
+# Package Manager Lockfiles (optional, kept out for portability)
+# ==============================================================================
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# ==============================================================================
+# Operating System & Misc noise
+# ==============================================================================
+.directory
+.Trashes
+.AppleDouble
+.LSOverride
+.fuse_hidden*
+.gvfs0*
+.listing
+.localized
+Network Trash Folder
+Temporary Items
+$RECYCLE.BIN/
+ehthumbs.db
+Thumbnails.db
+Thumbs.db:encryptable
+com.apple.timemachine.donotpresent
+Client.com.apple.timemachine.splocalized
+*.lnk
+Document*.pdf
+~$*.docx
+~$*.xlsx
+~$*.pptx
+
+# ==============================================================================
+# Local config / machine-specific
+# ==============================================================================
+.vg-config/
+AGENTS.md
+config.local.js
+config.local.ts
+local.settings.json
+user-preferences.json
+.devcontainer/
+.dockerignore.bak
+docker-compose.override.yml
+Makefile.local
+*.local
+.projenrc.local.js
+private/
+
+# ==============================================================================
+# Tooling caches
+# ==============================================================================
+.npm/
+.node_repl_history
+.python-version
+__pycache__/
+.venv/
+.mypy_cache/
+.ruff_cache/
+.gradle/
+target/
+bin/
+obj/
+*.class
+*.jar
+*.war
+*.ear
+*.dll
+*.exe
+*.o
+*.obj
+
+# ==============================================================================
+# Documentation build artifacts
+# ==============================================================================
+docs/.vitepress/dist/
+docs/.vitepress/cache/
+.book/
+_site/
+*.aux
+*.lof
+*.lot
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+.bbl
+.bcf
+.run.xml
+
+# ==============================================================================
+# Vendor & generated
+# ==============================================================================
+vendor/
+public/vendor/
+static/vendor/
+generated/
+*.gen.ts
+*.gen.js
+.swagger-codegen/
+.openapi-generator/
