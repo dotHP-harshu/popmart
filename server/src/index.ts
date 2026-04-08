@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import connectDB from './config/db';
 
 dotenv.config();
 
@@ -14,6 +15,11 @@ app.get('/api/health', (_req, res) => {
   res.json({ success: true, message: 'PopMart API is running' });
 });
 
-app.listen(PORT, () => {
-  console.log(`Server started on port ${PORT}`);
-});
+const startServer = async () => {
+  await connectDB();
+  app.listen(PORT, () => {
+    console.log(`Server started on port ${PORT}`);
+  });
+};
+
+startServer();
