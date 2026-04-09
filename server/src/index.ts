@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import connectDB from './config/db';
+import authRoutes from './routes/auth';
 
 dotenv.config();
 
@@ -14,6 +15,8 @@ app.use(express.json());
 app.get('/api/health', (_req, res) => {
   res.json({ success: true, message: 'PopMart API is running' });
 });
+
+app.use('/api/auth', authRoutes);
 
 const startServer = async () => {
   await connectDB();
