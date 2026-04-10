@@ -3,6 +3,9 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import connectDB from './config/db';
 import authRoutes from './routes/auth';
+import adminRoutes from './routes/admin';
+import sellerRoutes from './routes/seller';
+import buyerRoutes from './routes/buyer';
 
 dotenv.config();
 
@@ -17,6 +20,9 @@ app.get('/api/health', (_req, res) => {
 });
 
 app.use('/api/auth', authRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api/seller', sellerRoutes);
+app.use('/api/buyer', buyerRoutes);
 
 const startServer = async () => {
   await connectDB();
