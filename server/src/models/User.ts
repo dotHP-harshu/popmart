@@ -6,6 +6,7 @@ export interface IUser extends Document {
   passwordHash: string;
   role: 'admin' | 'seller' | 'buyer';
   isApproved: boolean;
+  isActive: boolean;
   createdAt: Date;
 }
 
@@ -21,6 +22,7 @@ const UserSchema = new Schema<IUser>(
       default: 'buyer'
     },
     isApproved: { type: Boolean, default: false },
+    isActive: { type: Boolean, default: true },
   },
   { timestamps: true }
 );
