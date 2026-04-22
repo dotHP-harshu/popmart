@@ -32,7 +32,7 @@ router.post('/products', authenticateUser, requireRole(['seller']), async (req: 
       return res.status(403).json({ success: false, error: 'Seller not approved yet' });
     }
 
-    const { productName, price, stockQuantity, description } = req.body;
+    const { productName, price, stockQuantity, description, images, category } = req.body;
 
     if (!productName || price === undefined || stockQuantity === undefined) {
       return res.status(400).json({ success: false, error: 'Product name, price, and stock are required' });
@@ -44,6 +44,8 @@ router.post('/products', authenticateUser, requireRole(['seller']), async (req: 
       price,
       stockQuantity,
       description: description || '',
+      images: images || [],
+      category: category || 'General',
     });
 
     res.status(201).json({ success: true, data: newProduct });
@@ -63,9 +65,19 @@ router.put('/products/:id', authenticateUser, requireRole(['seller']), async (re
       return res.status(403).json({ success: false, error: 'Not your product' });
     }
 
+    const { productName, price, stockQuantity, description, images, category } = req.body;
+
+    const updateFields: Record<string, unknown> = {};
+    if (productName !== undefined) updateFields.productName = productName;
+    if (price !== undefined) updateFields.price = price;
+    if (stockQuantity !== undefined) updateFields.stockQuantity = stockQuantity;
+    if (description !== undefined) updateFields.description = description;
+    if (images !== undefined) updateFields.images = images;
+    if (category !== undefined) updateFields.category = category;
+
     const updatedProduct = await Product.findByIdAndUpdate(
       req.params.id,
-      { $set: req.body },
+      { $set: updateFields },
       { new: true }
     );
 

@@ -8,7 +8,7 @@ const router = Router();
 
 router.get('/products', authenticateUser, requireRole(['buyer']), async (_req: AuthRequest, res: Response) => {
   try {
-    const availableProducts = await Product.find({ stockQuantity: { $gt: 0 } }).populate('sellerId', 'fullName');
+    const availableProducts = await Product.find({ stockQuantity: { $gt: 0 }, isActive: true }).populate('sellerId', 'fullName');
     res.json({ success: true, data: availableProducts });
   } catch (error) {
     res.status(500).json({ success: false, error: 'Server error' });
