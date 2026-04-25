@@ -131,6 +131,17 @@ export const api = {
     return handleResponse(response);
   },
 
+  async uploadImage(file: File) {
+    const formData = new FormData();
+    formData.append('image', file);
+    const response = await fetch(`${API_BASE}/seller/upload`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: formData,
+    });
+    return handleResponse(response);
+  },
+
   async getSellerOrders() {
     const response = await fetch(`${API_BASE}/seller/orders`, { headers: getAuthHeaders() });
     return handleResponse(response);

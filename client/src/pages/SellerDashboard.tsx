@@ -216,46 +216,67 @@ function ProductsTab({ products, setProducts, showAddForm, setShowAddForm }: {
     description: '',
     category: 'General',
   });
-  const [imageUrls, setImageUrls] = useState<string[]>(['']);
+  const [imageFiles, setImageFiles] = useState<File[]>([]);
+  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+  const [uploading, setUploading] = useState(false);
   const [error, setError] = useState('');
 
-  const handleAddImageField = () => {
-    setImageUrls([...imageUrls, '']);
+  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files) return;
+
+    const newFiles = Array.from(files);
+    setImageFiles([...imageFiles, ...newFiles]);
+
+    const newPreviews = newFiles.map((file) => URL.createObjectURL(file));
+    setImagePreviews([...imagePreviews, ...newPreviews]);
   };
 
-  const handleRemoveImageField = (index: number) => {
-    setImageUrls(imageUrls.filter((_, i) => i !== index));
-  };
-
-  const handleImageUrlChange = (index: number, value: string) => {
-    const updated = [...imageUrls];
-    updated[index] = value;
-    setImageUrls(updated);
+  const handleRemoveImage = (index: number) => {
+    URL.revokeObjectURL(imagePreviews[index]);
+    setImageFiles(imageFiles.filter((_, i) => i !== index));
+    setImagePreviews(imagePreviews.filter((_, i) => i !== index));
   };
 
   const handleAddProduct = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    setUploading(true);
 
-    const validImages = imageUrls.filter((url) => url.trim() !== '');
+    const uploadedUrls: string[] = [];
 
-    const response = await api.createProduct({
+    for (const file of imageFiles) {
+      const response = await api.uploadImage(file);
+      if (response.success) {
+        uploadedUrls.push(response.data.url);
+      } else {
+        setError('Failed to upload one or more images');
+        setUploading(false);
+        return;
+      }
+    }
+
+    const productResponse = await api.createProduct({
       productName: formData.productName,
       price: Number(formData.price),
       stockQuantity: Number(formData.stockQuantity),
       description: formData.description,
-      images: validImages,
+      images: uploadedUrls,
       category: formData.category,
     });
 
-    if (response.success) {
-      setProducts([...products, response.data]);
+    setUploading(false);
+
+    if (productResponse.success) {
+      setProducts([...products, productResponse.data]);
       setFormData({ productName: '', price: '', stockQuantity: '', description: '', category: 'General' });
-      setImageUrls(['']);
+      imagePreviews.forEach((url) => URL.revokeObjectURL(url));
+      setImageFiles([]);
+      setImagePreviews([]);
       setShowAddForm(false);
       showToast('Product added!', 'success');
     } else {
-      setError(response.error);
+      setError(productResponse.error);
     }
   };
 
@@ -325,59 +346,48 @@ function ProductsTab({ products, setProducts, showAddForm, setShowAddForm }: {
             className="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 resize-none"
           />
 
-          {/* image URL inputs */}
+          {/* image upload */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Product Images</label>
-            <div className="space-y-2">
-              {imageUrls.map((url, index) => (
-                <div key={index} className="flex gap-2">
-                  <input
-                    type="url"
-                    placeholder="https://example.com/image.jpg"
-                    value={url}
-                    onChange={(e) => handleImageUrlChange(index, e.target.value)}
-                    className="flex-1 px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500"
-                  />
-                  {imageUrls.length > 1 && (
-                    <button
-                      type="button"
-                      onClick={() => handleRemoveImageField(index)}
-                      className="px-3 text-gray-400 hover:text-red-600 transition"
-                    >
-                      ✕
-                    </button>
-                  )}
-                </div>
-              ))}
+            <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-brand-500 transition relative">
+              <svg className="w-8 h-8 mx-auto mb-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              <p className="text-sm text-gray-500 mb-2">Click to upload or drag images here</p>
+              <input
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={handleImageSelect}
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+              />
             </div>
-            <button
-              type="button"
-              onClick={handleAddImageField}
-              className="mt-2 text-sm text-brand-600 hover:text-brand-700 font-medium"
-            >
-              + Add another image
-            </button>
 
             {/* preview */}
-            {imageUrls.some((url) => url.trim() !== '') && (
+            {imagePreviews.length > 0 && (
               <div className="flex gap-2 mt-3 flex-wrap">
-                {imageUrls.filter((url) => url.trim() !== '').map((url, i) => (
-                  <img
-                    key={i}
-                    src={url}
-                    alt={`Preview ${i + 1}`}
-                    className="w-16 h-16 rounded-lg object-cover border"
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64"><rect fill="%23fee2e2" width="64" height="64"/><text fill="%23ef4444" x="50%" y="50%" text-anchor="middle" dy=".3em" font-size="8">Invalid</text></svg>';
-                    }}
-                  />
+                {imagePreviews.map((url, i) => (
+                  <div key={i} className="relative">
+                    <img
+                      src={url}
+                      alt={`Preview ${i + 1}`}
+                      className="w-16 h-16 rounded-lg object-cover border"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveImage(i)}
+                      className="absolute -top-2 -right-2 bg-red-500 text-white w-5 h-5 rounded-full text-xs flex items-center justify-center"
+                    >
+                      x
+                    </button>
+                  </div>
                 ))}
               </div>
             )}
           </div>
 
-          <button type="submit" className="bg-brand-600 text-white px-6 py-2.5 rounded-lg text-sm font-medium hover:bg-brand-700 transition">
-            Add Product
+          <button type="submit" disabled={uploading} className="bg-brand-600 text-white px-6 py-2.5 rounded-lg text-sm font-medium hover:bg-brand-700 transition disabled:opacity-50">
+            {uploading ? 'Uploading...' : 'Add Product'}
           </button>
         </form>
       )}

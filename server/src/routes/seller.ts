@@ -4,8 +4,46 @@ import { authenticateUser, requireRole } from '../middleware/auth';
 import { Product } from '../models/Product';
 import { Order } from '../models/Order';
 import { User } from '../models/User';
+import multer from 'multer';
+import cloudinary from '../config/cloudinary';
+import fs from 'fs';
 
 const router = Router();
+
+const upload = multer({ dest: 'uploads/' });
+
+router.post('/upload', authenticateUser, requireRole(['seller']), upload.single('image'), async (req: AuthRequest, res: Response) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ success: false, error: 'No image file provided' });
+    }
+
+    const uploadResult = await new Promise<{ secure_url: string; public_id: string }>((resolve, reject) => {
+      const uploadStream = cloudinary.uploader.upload_stream(
+        { folder: 'popmart/products' },
+        (error, result) => {
+          if (error || !result) return reject(error);
+          resolve({ secure_url: result.secure_url, public_id: result.public_id });
+        }
+      );
+      fs.createReadStream(req.file!.path).pipe(uploadStream);
+    });
+
+    // remove temp file
+    fs.unlinkSync(req.file.path);
+
+    res.json({
+      success: true,
+      data: { url: uploadResult.secure_url, publicId: uploadResult.public_id },
+    });
+  } catch (error) {
+    // clean up temp file if it exists
+    if (req.file && fs.existsSync(req.file.path)) {
+      fs.unlinkSync(req.file.path);
+    }
+    res.status(500).json({ success: false, error: 'Upload failed' });
+  }
+});
 
 // allowed status transitions for the order state machine
 const allowedTransitions: Record<string, string[]> = {
