@@ -38,10 +38,10 @@ function ToastContainer() {
       {toasts.map((toast) => (
         <div
           key={toast.id}
-          className={`pointer-events-auto px-4 py-3 rounded-lg shadow-lg text-white text-sm font-medium animate-slide-in ${
+          className={`pointer-events-auto px-4 py-3 border-2 border-black text-white text-sm font-bold uppercase tracking-wide animate-slide-in ${
             toast.type === 'success' ? 'bg-emerald-600' :
             toast.type === 'error' ? 'bg-red-600' :
-            'bg-blue-600'
+            'bg-black'
           }`}
         >
           {toast.text}
