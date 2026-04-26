@@ -31,54 +31,51 @@ function Login() {
   };
 
   return (
-    <div className="min-h-screen gradient-brand flex items-center justify-center px-4 relative overflow-hidden">
-      {/* floating shapes */}
-      <div className="absolute top-20 left-10 w-72 h-72 bg-white/5 rounded-full animate-float" />
-      <div className="absolute bottom-20 right-10 w-96 h-96 bg-white/5 rounded-full animate-float" style={{ animationDelay: '3s' }} />
-      <div className="absolute top-1/2 left-1/3 w-48 h-48 bg-white/5 rounded-full animate-float" style={{ animationDelay: '1.5s' }} />
+    <div className="min-h-screen bg-white flex items-center justify-center px-4">
+      <div className="w-full max-w-md animate-fade-in">
+        <div className="border-2 border-black p-8">
+          <div className="mb-8">
+            <h1 className="text-3xl font-black uppercase tracking-tight">PopMart</h1>
+            <p className="text-sm text-gray-500 mt-1">Welcome back to the marketplace</p>
+          </div>
 
-      <div className="glass rounded-2xl p-8 w-full max-w-md relative z-10 animate-fade-in">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-white">PopMart</h1>
-          <p className="text-white/70 mt-2">Welcome back to the marketplace</p>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider mb-1.5">Email</label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full px-4 py-3 border-2 border-black bg-white text-black placeholder-gray-400 focus:outline-none focus:bg-gray-100 transition text-sm"
+                placeholder="you@example.com"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider mb-1.5">Password</label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full px-4 py-3 border-2 border-black bg-white text-black placeholder-gray-400 focus:outline-none focus:bg-gray-100 transition text-sm"
+                placeholder="Enter your password"
+                required
+              />
+            </div>
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-black text-white py-3 font-bold uppercase tracking-wider text-sm hover:bg-gray-800 disabled:opacity-50 transition border-2 border-black mt-2"
+            >
+              {loading ? 'Signing in...' : 'Sign In'}
+            </button>
+          </form>
+
+          <p className="text-center mt-6 text-sm text-gray-500">
+            Don't have an account?{' '}
+            <Link to="/register" className="text-black font-bold uppercase hover:underline">Create one</Link>
+          </p>
         </div>
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-white/80 mb-1.5">Email</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-white/40 transition"
-              placeholder="you@example.com"
-              required
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-white/80 mb-1.5">Password</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-white/40 transition"
-              placeholder="Enter your password"
-              required
-            />
-          </div>
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-white text-brand-700 py-3 rounded-lg font-semibold hover:bg-white/90 disabled:opacity-50 transition mt-2"
-          >
-            {loading ? 'Signing in...' : 'Sign In'}
-          </button>
-        </form>
-
-        <p className="text-center mt-6 text-sm text-white/60">
-          Don't have an account?{' '}
-          <Link to="/register" className="text-white font-medium hover:underline">Create one</Link>
-        </p>
       </div>
     </div>
   );
