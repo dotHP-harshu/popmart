@@ -11,6 +11,7 @@ interface UserInfo {
 interface AuthState {
   user: UserInfo | null;
   token: string | null;
+  _isLoaded: boolean;
   login: (user: UserInfo, token: string) => void;
   logout: () => void;
   loadUser: () => void;
@@ -19,15 +20,16 @@ interface AuthState {
 export const useAuthStore = create<AuthState>((set) => ({
   user: null,
   token: null,
+  _isLoaded: false,
   login: (user, token) => {
     localStorage.setItem('popmart_token', token);
     localStorage.setItem('popmart_user', JSON.stringify(user));
-    set({ user, token });
+    set({ user, token, _isLoaded: true });
   },
   logout: () => {
     localStorage.removeItem('popmart_token');
     localStorage.removeItem('popmart_user');
-    set({ user: null, token: null });
+    set({ user: null, token: null, _isLoaded: true });
   },
   loadUser: () => {
     const token = localStorage.getItem('popmart_token');
@@ -35,11 +37,13 @@ export const useAuthStore = create<AuthState>((set) => ({
     if (token && userStr) {
       try {
         const user = JSON.parse(userStr);
-        set({ user, token });
+        set({ user, token, _isLoaded: true });
+        return;
       } catch {
         localStorage.removeItem('popmart_token');
         localStorage.removeItem('popmart_user');
       }
     }
+    set({ _isLoaded: true });
   },
 }));

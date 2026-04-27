@@ -26,11 +26,19 @@ function HomeRedirect() {
 }
 
 function App() {
-  const { loadUser } = useAuthStore();
+  const { loadUser, _isLoaded } = useAuthStore();
 
   useEffect(() => {
     loadUser();
   }, [loadUser]);
+
+  if (!_isLoaded) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-white">
+        <div className="w-8 h-8 border-2 border-gray-300 border-t-black rounded-full animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <BrowserRouter>
