@@ -136,6 +136,12 @@ function SellerDashboard() {
             </svg>
           </button>
           <h2 className="text-lg font-black uppercase tracking-tight">{activeTab}</h2>
+          <button
+            onClick={() => { logout(); navigate('/login'); }}
+            className="ml-auto text-sm text-red-600 font-bold uppercase border-2 border-red-600 px-3 py-1 hover:bg-red-600 hover:text-white transition lg:hidden"
+          >
+            Logout
+          </button>
         </div>
 
         <div className="p-4 lg:p-6">
