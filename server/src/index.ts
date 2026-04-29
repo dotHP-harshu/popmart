@@ -6,6 +6,16 @@ import authRoutes from './routes/auth';
 import adminRoutes from './routes/admin';
 import sellerRoutes from './routes/seller';
 import buyerRoutes from './routes/buyer';
+import dns from 'node:dns';
+
+
+// Force Node.js to use specific public DNS servers for Atlas SRV resolution
+dns.setServers([
+  '8.8.8.8', // Google DNS
+  '8.8.4.4', // Google DNS Secondary
+  '1.1.1.1'  // Cloudflare DNS
+]);
+
 
 dotenv.config();
 
